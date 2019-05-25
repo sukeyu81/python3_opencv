@@ -1,0 +1,35 @@
+import cv2 as cv
+import numpy as np
+from matplotlib import  pyplot as plt
+
+img1 = cv.imread("/home/syu/PycharmProjects/br.png")
+img2 = cv.imread("/home/syu/PycharmProjects/logo.jpg")
+
+rows, cols, channels = img2.shape
+roi = img1[0:rows, 0:cols]
+cv.imshow('rio', roi)
+# Create a mask
+img2gray = cv.cvtColor(img2, cv.COLOR_BGR2GRAY)
+ret, Mask = cv.threshold(img2gray, 170, 255, cv.THRESH_BINARY)
+Mask_inv = cv.bitwise_not(Mask)
+
+img1_bg = cv.bitwise_and(roi, roi, mask=Mask)
+img2_fg = cv.bitwise_and(img2, img2, mask=Mask_inv)
+
+dst = cv.add(img1_bg, img2_fg)
+img1[0:rows, 0:cols] = dst
+
+cv.imshow('logo', img2)
+cv.imshow('img1_bg', img1_bg)
+cv.imshow('img2_fg', img2_fg)
+cv.imshow('logo', img2)
+cv.imshow('grey', img2gray)
+cv.imshow('MASK_black_white', Mask)
+cv.imshow('MASK_black_white_iv', Mask_inv)
+cv.imshow('das', img1)
+cv.waitKey(0)
+cv.destroyAllWindows()
+
+
+cv.waitKey(0)
+cv.destroyAllWindows()
